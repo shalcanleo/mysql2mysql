@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <jmxConfigurator/>
+
+    <!-- include logback template from spring boot.jar -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <property name="FILE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80}:%L - %msg%n"></property>
+    <!--docker 环境需要统一日志输出-->
+    <if condition='isDefined("log.dir")'>
+        <then>
+            <property name="logDir" value="${log.dir}"/>
+        </then>
+        <else>
+            <property name="logDir" value="logs"/>
+        </else>
+    </if>
+    <if condition='isDefined("profiles.active")'>
+        <then>
+            <property name="profileActive" value="${profiles.active}"/>
+        </then>
+        <else>
+            <property name="profileActive" value="dev"/>
+        </else>
+    </if>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logDir}/syncer.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logDir}/syncer.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <!--只保留三天日志-->
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80} - %msg%n</pattern>-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- 结合Profile判断当前的环境信息 -->
+    <if condition='p("profileActive").equals("txt")'>
+        <then>
+            <!-- project default level-->
+            <logger name="com.ziyitong" level="INFO" additivity="true"/>
+            <root level="INFO">
+                <appender-ref ref="FILE"/>
+            </root>
+        </then>
+    </if>
+    <if condition='p("profileActive").equals("console")'>
+        <then>
+            <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder charset="UTF-8">
+                    <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80} - %msg%n</pattern>-->
+                    <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+                </encoder>
+            </appender>
+            <root level="INFO">
+                <appender-ref ref="CONSOLE"/>
+            </root>
+        </then>
+    </if>
+    <if condition='p("profileActive").equals("txtAndConsole")'>
+        <then>
+            <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder charset="UTF-8">
+                    <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80} - %msg%n</pattern>-->
+                    <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+                </encoder>
+            </appender>
+            <root level="INFO">
+                <appender-ref ref="CONSOLE"/>
+            </root>
+            <!-- project default level-->
+            <logger name="com.ziyitong" level="INFO" additivity="true"/>
+            <root level="INFO">
+                <appender-ref ref="FILE"/>
+            </root>
+        </then>
+    </if>
+    <if condition='p("profileActive").equals("dev")'>
+        <then>
+            <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder charset="UTF-8">
+                    <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80} - %msg%n</pattern>-->
+                    <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+                </encoder>
+            </appender>
+            <root level="INFO">
+                <appender-ref ref="CONSOLE"/>
+            </root>
+            <!-- project default level-->
+            <logger name="com.ziyitong" level="INFO" additivity="true"/>
+            <root level="INFO">
+                <appender-ref ref="FILE"/>
+            </root>
+        </then>
+    </if>
+
+
+</configuration>
