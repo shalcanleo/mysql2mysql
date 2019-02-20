@@ -42,7 +42,7 @@
     <if condition='p("profileActive").equals("txt")'>
         <then>
             <!-- project default level-->
-            <logger name="com.ziyitong" level="INFO" additivity="true"/>
+            <logger name="org.ning" level="INFO" additivity="true"/>
             <root level="INFO">
                 <appender-ref ref="FILE"/>
             </root>
@@ -73,7 +73,7 @@
                 <appender-ref ref="CONSOLE"/>
             </root>
             <!-- project default level-->
-            <logger name="com.ziyitong" level="INFO" additivity="true"/>
+            <logger name="org.ning" level="INFO" additivity="true"/>
             <root level="INFO">
                 <appender-ref ref="FILE"/>
             </root>
@@ -91,7 +91,7 @@
                 <appender-ref ref="CONSOLE"/>
             </root>
             <!-- project default level-->
-            <logger name="com.ziyitong" level="INFO" additivity="true"/>
+            <logger name="org.ning" level="INFO" additivity="true"/>
             <root level="INFO">
                 <appender-ref ref="FILE"/>
             </root>
